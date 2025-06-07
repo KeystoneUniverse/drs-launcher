@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DRS Pipeline Launcher</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100vh; margin: 0;
+      background: #f5f5f5;
+    }
+    button {
+      font-size: 1.25rem;
+      padding: 0.75rem 1.5rem;
+      border: none; border-radius: 8px;
+      cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      background: #4285F4; color: white;
+    }
+    #status {
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <button id="run-btn">▶ Run DRS Process</button>
+  <div id="status"></div>
+
+  <script>
+    // We’ll replace this URL later with your real Cloud Function endpoint
+    const ENDPOINT = 'https://us-central1-your-project.cloudfunctions.net/drs_processor';
+
+    document.getElementById('run-btn').addEventListener('click', () => {
+      const status = document.getElementById('status');
+      status.textContent = '⏳ Running… please wait';
+      fetch(ENDPOINT, { method: 'POST' })
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.json();
+        })
+        .then(_ => status.textContent = '✅ Completed successfully!')
+        .catch(err => status.textContent = '❌ Error: ' + err);
+    });
+  </script>
+</body>
+</html>
